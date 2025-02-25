@@ -6,49 +6,54 @@ struct Candidato {
     int votos;
 };
 
-int votar(struct candidato candidatos[], int totalCandidatos) {
+int votar(struct Candidato candidatos[], int totalCandidatos) {
     int voto;
     printf("Digite o numero do candidato (1 a 99): ");
-    scanf("%d", &voto);
-    int encontrado = 0;
+    if (scanf(" %d", &voto) != 1) { // Garante que a entrada é um número válido
+        printf("Entrada invalida!\n");
+        while (getchar() != '\n'); // Limpa o buffer do teclado
+        return 0;
+    }
+
     for (int i = 0; i < totalCandidatos; i++) {
         if (candidatos[i].numero == voto) {
             candidatos[i].votos++;
-            encontrado = 1;
             printf("Voto computado para %s!\n", candidatos[i].nome);
-            return 1; // Retorna 1 para contar o voto no total
+            return 1;
         }
     }
-    if (!encontrado) {
-        printf("Numero de candidato invalido!\n");
-    }
+
+    printf("Numero de candidato invalido!\n");
     return 0;
 }
 
-void apurarVotos(struct candidato candidatos[], int totalCandidatos) {
+void apurarVotos(struct Candidato candidatos[], int totalCandidatos) {
     printf("\nResultado da apuracao de votos:\n");
-    for (int i = 0; i < totalCandidatos; i++) { // Corrigido para "i < totalCandidatos"
+    for (int i = 0; i < totalCandidatos; i++) {
         printf("%s (numero %d): %d votos\n", candidatos[i].nome, candidatos[i].numero, candidatos[i].votos);
     }
 }
 
-void percentualVotos(struct candidato candidatos[], int totalCandidatos, int totalVotos) {
+void percentualVotos(struct Candidato candidatos[], int totalCandidatos, int totalVotos) {
     if (totalVotos == 0) {
         printf("Nenhum voto computado ainda.\n");
         return;
     }
     printf("\nPercentual de votos:\n");
     for (int i = 0; i < totalCandidatos; i++) {
-        float percentual = ((float)candidatos[i].votos / totalVotos) * 100; // Cálculo correto do percentual
+        float percentual = ((float)candidatos[i].votos / totalVotos) * 100;
         printf("%s: %.2f%% dos votos\n", candidatos[i].nome, percentual);
     }
 }
 
 int main() {
-    struct candidato candidatos[3] = {{10, "Joao da Padaria", 0}, {20, "Maria da Farmacia", 0}, {30, "Ze do Gas", 0}};
-    int opcao;
-    int totalVotos = 0;
-    int totalCandidatos = 3;
+    struct Candidato candidatos[3] = {
+        {10, "Joao da Padaria", 0}, 
+        {20, "Maria da Farmacia", 0}, 
+        {30, "Ze do Gas", 0}
+    };
+
+    int opcao, totalVotos = 0, totalCandidatos = 3;
 
     do {
         printf("\nMenu de opcoes:\n");
@@ -57,7 +62,12 @@ int main() {
         printf("3. Emitir percentual de votos\n");
         printf("4. Sair\n");
         printf("Escolha uma opcao: ");
-        scanf("%d", &opcao);
+
+        if (scanf(" %d", &opcao) != 1) {
+            printf("Entrada invalida!\n");
+            while (getchar() != '\n'); // Limpa buffer
+            continue;
+        }
 
         switch (opcao) {
             case 1:
